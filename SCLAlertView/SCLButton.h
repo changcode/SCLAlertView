@@ -35,6 +35,14 @@ typedef NS_ENUM(NSInteger, SCLActionType)
  */
 @property SCLActionType actionType;
 
+/** Set button can hide AlertView
+ *
+ *  Default is YES
+ *
+ */
+
+@property BOOL enableHideAlertView;
+
 /** Set action button block.
  *
  * TODO

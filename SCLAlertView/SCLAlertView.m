@@ -675,6 +675,7 @@ SCLTimerDisplay *buttonTimer;
     btn.layer.masksToBounds = YES;
     [btn setTitle:title forState:UIControlStateNormal];
     btn.titleLabel.font = [UIFont fontWithName:_buttonsFontFamily size:_buttonsFontSize];
+    btn.enableHideAlertView = YES;
     
     // Update view height
     self.windowHeight += (btn.frame.size.height + ADD_BUTTON_PADDING);
@@ -760,7 +761,7 @@ SCLTimerDisplay *buttonTimer;
         NSLog(@"Unknown action type for button");
     }
     
-    if([self isVisible])
+    if([self isVisible] && btn.enableHideAlertView)
     {
         [self hideView];
     }
