@@ -336,7 +336,7 @@ SCLTimerDisplay *buttonTimer;
         if (self.view.superview != nil)
         {
             // View is showing, position at center of screen
-            r = CGRectMake((sz.width-_windowWidth)/2, (sz.height-_windowHeight)/2 < 0 ? kCircleHeightBackground / 2 : (sz.height-_windowHeight)/2 < 0, _windowWidth, _windowHeight);
+            r = CGRectMake((sz.width-_windowWidth)/2, (sz.height-_windowHeight)/2 < 0 ? kCircleHeightBackground / 2 : (sz.height-_windowHeight)/2, _windowWidth, _windowHeight);
         }
         else
         {
