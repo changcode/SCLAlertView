@@ -35,6 +35,7 @@
 @property (nonatomic, strong) UIView *circleView;
 @property (nonatomic, strong) UIView *circleViewBackground;
 @property (nonatomic, strong) UIView *contentView;
+@property (nonatomic, strong) UIScrollView *scrollContentView;
 @property (nonatomic, strong) UIImageView *backgroundView;
 @property (nonatomic, strong) UITapGestureRecognizer *gestureRecognizer;
 @property (nonatomic, strong) NSString *titleFontFamily;
@@ -182,6 +183,8 @@ SCLTimerDisplay *buttonTimer;
     _labelTitle = [[UILabel alloc] init];
     _viewText = [[UITextView alloc] init];
     _contentView = [[UIView alloc] init];
+    _scrollContentView = [[UIScrollView alloc] init];
+    
     _circleView = [[UIView alloc] init];
     _circleViewBackground = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, kCircleHeightBackground, kCircleHeightBackground)];
     _circleIconImageView = [[UIImageView alloc] init];
@@ -191,7 +194,11 @@ SCLTimerDisplay *buttonTimer;
     _customViews = [[NSMutableArray alloc] init];
     
     // Add Subviews
-    [self.view addSubview:_contentView];
+//    [self.view addSubview:_contentView];
+    
+    [self.view addSubview:_scrollContentView];
+    [_scrollContentView addSubview:_contentView];
+    
     [self.view addSubview:_circleViewBackground];
     
     // Circle View
@@ -240,6 +247,13 @@ SCLTimerDisplay *buttonTimer;
     CGRect position = [self.contentView convertRect:self.labelTitle.frame toView:self.view];
     _labelTitle.frame = position;
     [self.view addSubview:_labelTitle];
+    
+    //Scroll Contetn View
+    _scrollContentView.backgroundColor = [UIColor whiteColor];
+    _scrollContentView.layer.cornerRadius = 5.0f;
+    _scrollContentView.layer.masksToBounds = YES;
+    _scrollContentView.layer.borderWidth = 0.5f;
+    _scrollContentView.contentSize = _contentView.bounds.size;
     
     // Colors
     self.backgroundViewColor = [UIColor whiteColor];
@@ -333,6 +347,8 @@ SCLTimerDisplay *buttonTimer;
         // Set frames
         self.view.frame = r;
         _contentView.frame = CGRectMake(0.0f, 0.0f, _windowWidth, _windowHeight);
+        _scrollContentView.frame = CGRectMake(0.0f, 0.0f, _windowWidth, _windowHeight > sz.height ? sz.height - kCircleHeightBackground/2: _windowHeight );;
+        
         _circleViewBackground.frame = CGRectMake(_windowWidth / 2 - kCircleHeightBackground / 2, kCircleBackgroundTopPosition, kCircleHeightBackground, kCircleHeightBackground);
         _circleView.layer.cornerRadius = _circleView.frame.size.height / 2;
         _circleIconImageView.frame = CGRectMake(kCircleHeight / 2 - _circleIconHeight / 2, kCircleHeight / 2 - _circleIconHeight / 2, _circleIconHeight, _circleIconHeight);
@@ -342,16 +358,18 @@ SCLTimerDisplay *buttonTimer;
     else
     {
         CGFloat x = (sz.width - _windowWidth) / 2;
-        CGFloat y = (sz.height - _windowHeight - (kCircleHeight / 8)) / 2;
+        CGFloat y = (sz.height - _windowHeight - (kCircleHeight / 8)) / 2 < 0 ? kCircleHeightBackground / 2 : (sz.height - _windowHeight - (kCircleHeight / 8)) / 2;
         
-        _contentView.frame = CGRectMake(x, y, _windowWidth, _windowHeight);
+        _contentView.frame = CGRectMake(0, 0, _windowWidth, _windowHeight);
+        _scrollContentView.frame = CGRectMake(x, y , _windowWidth, _windowHeight > sz.height ? sz.height - kCircleHeightBackground/2: _windowHeight );
+        
         y -= kCircleHeightBackground / 2;
         x = (sz.width - kCircleHeightBackground) / 2;
         _circleView.layer.cornerRadius = _circleView.frame.size.height / 2;        
         _circleViewBackground.frame = CGRectMake(x, y, kCircleHeightBackground, kCircleHeightBackground);
         _circleIconImageView.frame = CGRectMake(kCircleHeight / 2 - _circleIconHeight / 2, kCircleHeight / 2 - _circleIconHeight / 2, _circleIconHeight, _circleIconHeight);
         kTitleTop = _useLargerIcon ? kTitleTop : kTitleTop + 4.0f;
-        _labelTitle.frame = CGRectMake(12.0f + self.contentView.frame.origin.x, kTitleTop + self.contentView.frame.origin.y, _windowWidth - 24.0f, kTitleHeight);
+        _labelTitle.frame = CGRectMake(12.0f + self.scrollContentView.frame.origin.x, kTitleTop + self.scrollContentView.frame.origin.y, _windowWidth - 24.0f, kTitleHeight);
     }
     
     // Text fields
@@ -384,6 +402,8 @@ SCLTimerDisplay *buttonTimer;
     
     // Adjust corner radius, if a value has been passed
     _contentView.layer.cornerRadius = self.cornerRadius ? self.cornerRadius : 5.0f;
+    
+    _scrollContentView.contentSize = _contentView.frame.size;
 }
 
 #pragma mark - UIViewController
